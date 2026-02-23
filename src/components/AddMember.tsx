@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { friendAPI, conversationAPI } from '../services/api';
+import type { User } from '../types';
 import './CreateGroup.css'; // Reuse modal styles
 
 interface AddMemberProps {
@@ -10,7 +11,7 @@ interface AddMemberProps {
 }
 
 const AddMember = ({ conversationId, existingParticipantIds, onClose, onSuccess }: AddMemberProps) => {
-    const [friends, setFriends] = useState<string[]>([]);
+    const [friends, setFriends] = useState<User[]>([]);
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -20,7 +21,7 @@ const AddMember = ({ conversationId, existingParticipantIds, onClose, onSuccess 
             try {
                 const { data } = await friendAPI.getFriends();
                 // Filter out friends already in the group
-                const availableFriends = data.filter((friendId: string) => !existingParticipantIds.includes(friendId));
+                const availableFriends = data.filter((friend: User) => !existingParticipantIds.includes(friend._id));
                 setFriends(availableFriends);
             } catch (err) {
                 console.error('Failed to load friends:', err);
@@ -73,19 +74,19 @@ const AddMember = ({ conversationId, existingParticipantIds, onClose, onSuccess 
                         {friends.length === 0 ? (
                             <p className="no-friends">Tất cả bạn bè đã có mặt trong nhóm hoặc bạn chưa có bạn bè nào.</p>
                         ) : (
-                            friends.map(friendId => (
-                                <label key={friendId} className="friend-selection-item">
+                            friends.map(friend => (
+                                <label key={friend._id} className="friend-selection-item">
                                     <div className="friend-checkbox-wrapper">
                                         <input
                                             type="checkbox"
-                                            checked={selectedIds.includes(friendId)}
-                                            onChange={() => handleToggleMember(friendId)}
+                                            checked={selectedIds.includes(friend._id)}
+                                            onChange={() => handleToggleMember(friend._id)}
                                         />
                                     </div>
                                     <div className="friend-small-avatar">
-                                        {friendId.charAt(0).toUpperCase()}
+                                        {(friend.displayName || friend._id).charAt(0).toUpperCase()}
                                     </div>
-                                    <span className="friend-id">{friendId}</span>
+                                    <span className="friend-id">{friend.displayName || friend._id}</span>
                                 </label>
                             ))
                         )}
