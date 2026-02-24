@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 
-const SOCKET_URL = 'http://localhost:5000';
+const SOCKET_URL = 'https://bambochat-b8c5hedvh3dbbzh6.southeastasia-01.azurewebsites.net';
 
 let socket: Socket | null = null;
 

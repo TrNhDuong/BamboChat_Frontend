@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { LoginResponse, RegisterResponse, Conversation, Message, User, Friendship } from '../types';
 
-const API_BASE = 'http://localhost:5000/api';
+export const API_BASE = 'https://bambochat-b8c5hedvh3dbbzh6.southeastasia-01.azurewebsites.net/api';
 
 const api = axios.create({
     baseURL: API_BASE,
